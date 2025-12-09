@@ -9,7 +9,6 @@ class SPLSolverApp:
         self.root.geometry("1000x750")
         self.root.configure(bg="#e09898")
 
-        # --- Frame Header ---
         frame_top = tk.Frame(root, bg="#e6c3c3", pady=10)
         frame_top.pack(fill=tk.X)
 
@@ -31,13 +30,13 @@ class SPLSolverApp:
         tk.Label(frame_main, text="Matriks A (Koefisien):", bg="#e09898", font=("Arial", 11, "bold")).grid(row=0, column=0, sticky="w")
         self.text_A = scrolledtext.ScrolledText(frame_main, height=8, font=("Consolas", 10))
         self.text_A.grid(row=1, column=0, sticky="nsew", padx=5)
-        self.text_A.insert(tk.END, "1 2 3\n2 5 3\n1 0 8") # Default
+        self.text_A.insert(tk.END, "1 2 3\n2 5 3\n1 0 8") 
 
         # Input B
         tk.Label(frame_main, text="Matriks B (Konstanta):", bg="#e09898", font=("Arial", 11, "bold")).grid(row=0, column=1, sticky="w")
         self.text_B = scrolledtext.ScrolledText(frame_main, height=8, font=("Consolas", 10))
         self.text_B.grid(row=1, column=1, sticky="nsew", padx=5)
-        self.text_B.insert(tk.END, "5\n3\n17") # Default
+        self.text_B.insert(tk.END, "5\n3\n17")
 
         # Tombol
         btn_solve = tk.Button(root, text="Hitung & Tampilkan Langkah", bg="#fefdfd", font=("Arial", 12, "bold"), command=self.solve_spl)
@@ -90,7 +89,6 @@ class SPLSolverApp:
             # 2. Mulai Perhitungan & Pencatatan Langkah
             steps = f"=== PENYELESAIAN SPL METODE INVERS (Ordo {n}x{n}) ===\n\n"
             
-            # --- STEP 1: Determinan ---
             detA = np.linalg.det(A)
             steps += f"LANGKAH 1: Hitung Determinan Matriks A\n"
             steps += f"det(A) = {detA:.4f}\n\n"
@@ -100,13 +98,8 @@ class SPLSolverApp:
                 self.text_result.delete("1.0", tk.END)
                 self.text_result.insert(tk.END, steps)
                 return
-
-            # --- Percabangan Logika Tampilan (Kecil vs Besar) ---
             
             if n <= 5: 
-                # === LOGIKA MATRIKS KECIL (Tampilkan Semua Langkah Detail) ===
-                
-                # Hitung Kofaktor Manual untuk Ditampilkan
                 steps += f"LANGKAH 2: Hitung Matriks Kofaktor\n"
                 cofaktor_matrix = np.zeros((n, n))
                 for i in range(n):
@@ -128,13 +121,11 @@ class SPLSolverApp:
                 steps += self.format_matrix_str(inverse_A, "A^(-1)") + "\n"
 
             else:
-                # === LOGIKA MATRIKS BESAR (Ringkasan agar tidak crash) ===
                 steps += f"LANGKAH 2 - 4: Menghitung Invers Matriks\n"
                 steps += f"(Detail matriks Kofaktor & Adjoin disembunyikan karena ukuran {n}x{n} terlalu besar untuk ditampilkan)\n"
-                inverse_A = np.linalg.inv(A) # Pakai fungsi cepat numpy
+                inverse_A = np.linalg.inv(A) 
                 steps += "Matriks Invers berhasil dihitung.\n\n"
 
-            # --- STEP 5: Hasil Akhir (Sama untuk semua ukuran) ---
             steps += f"LANGKAH 5: Kalikan Invers dengan Matriks B (X = A^(-1) . B)\n"
             X = np.dot(inverse_A, B)
             
